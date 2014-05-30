@@ -1,0 +1,208 @@
+Public Class Form1
+    ''{30, 27, 20, 3, 13}, {13, 30, 23, 9, 33}, {20, 37, 40, 9, 23}, {3, 6, 9, 9, 9}, {13, 30, 23, 9, 33}
+    Public AA(,) As Integer = New Integer(8, 8) {{32, 17, 5, 5, 0, 5, 0, 27, 27}, {17, 60, 13, 13, 8, 13, 0, 55, 47}, _
+{5, 13, 13, 13, 8, 13, 0, 8, 0}, {5, 13, 13, 13, 8, 13, 0, 8, 0}, _
+{0, 8, 8, 8, 8, 8, 0, 8, 0}, {5, 13, 13, 13, 8, 13, 0, 8, 0}, _
+{0, 0, 0, 0, 0, 0, 0, 0, 0}, {27, 55, 8, 8, 8, 8, 0, 95, 87}, _
+{27, 47, 0, 0, 0, 0, 0, 87, 87}}
+    Public CA(,) As Integer = New Integer(8, 8) {}
+    Public XA(,) As Integer = New Integer(,) {{1, 3, 5, 6}, {4, 2, 41, 1}, {13, 10, 11, 12}, {7, 8, 9, 15}}
+    Public index As Integer
+    Public maks As Integer
+    Public ket As Boolean = False
+    Public result As Integer = 0
+    Dim teks As String
+    Public penampung As Integer = Nothing
+    Public NewCA(,) As Integer = New Integer(8, 8) {}
+    Public urutan() As Integer = New Integer(8) {0, 1, 2, 3, 4, 5, 6, 7, 8}
+
+
+
+    Private Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
+        ''For j As Integer = 0 To XA.GetUpperBound(1)
+        ''    ListHasil1.Items.Add(XA(j, 0) & "  " & XA(j, 1))
+        ''Next
+
+        ''For j As Integer = 0 To XA.GetUpperBound(1)
+        ''    ListHasil2.Items.Add(XA(0, j) & "  " & XA(1, j))
+        ''Next
+
+
+        Dim str As String = ""
+        Dim loc As Integer = 0
+
+        ListHasil1.Items.Add("  " & "A1" & vbTab & "A2")
+        For i As Integer = 0 To AA.GetUpperBound(1)
+            CA(i, 0) = AA(i, 0)
+            CA(i, 1) = AA(i, 1)
+
+            ListHasil1.Items.Add("  " & CA(i, 0) & vbTab & CA(i, 0))
+        Next
+
+        index = 2
+        maks = 0
+        While index <= AA.GetUpperBound(0)
+            penampung = index
+            maks = 0
+            loc = 0
+            For i As Integer = 0 To index - 1
+                result = Cont(i - 1, index, i)
+                If result >= maks Then
+                    maks = result
+                    loc = i
+                End If
+            Next
+            result = Cont(index - 1, index, -1)
+            If result > maks Then
+                loc = index
+            End If
+
+            Dim nilai As Integer = index
+            Dim mytemp As Integer = 0
+            While nilai > loc
+                For i As Integer = 0 To AA.GetUpperBound(1)
+                    CA(i, nilai) = CA(i, nilai - 1)
+                Next
+                urutan(nilai) = urutan(nilai - 1)
+                nilai -= 1
+            End While
+            urutan(loc) = index
+
+            For i As Integer = 0 To AA.GetUpperBound(1)
+                CA(i, loc) = AA(i, index)
+            Next
+            index += 1
+        End While
+
+
+        str = "  "
+        'ListHasil2.Items.Add("    A1 A2 A3 A4 A5")
+        For a As Integer = 0 To urutan.Length - 1
+            str &= " A" & urutan(a) + 1
+        Next
+        ListHasil2.Items.Add(str)
+        str = ""
+        For i As Integer = 0 To CA.GetUpperBound(0)
+            str = "A" & i + 1 & " "
+            For j As Integer = 0 To CA.GetUpperBound(1)
+                If CA(i, j) >= 10 Then
+                    str &= " "
+                Else
+                    str &= "  "
+                End If
+                str &= CA(i, j)
+            Next
+            ListHasil2.Items.Add(str)
+            str = ""
+        Next
+
+        Dim SimpanSementara() As Integer = New Integer(AA.GetUpperBound(0)) {}
+        Dim tempPos() As Integer = New Integer(AA.GetUpperBound(0)) {}
+        Dim total, posisi As Integer
+        Dim panjang As Integer = AA.GetUpperBound(0)
+        'For i As Integer = 0 To panjang
+        '    For j As Integer = 0 To panjang
+        '        SimpanSementara(j) = CA(j, i)
+        '    Next
+
+        '    For a As Integer = 0 To panjang
+        '        total = 0
+        '        For b As Integer = 0 To panjang
+        '            If (SimpanSementara(b) = AA(a, b)) Then
+        '                total += 1
+        '            Else
+        '                total -= 1
+        '            End If
+        '        Next
+
+        '        If total = panjang - 1 Then
+        '            posisi = a
+        '        End If
+        '    Next
+
+        '    '    tempPos(i) = posisi
+        '    '    posisi = 0
+        'Next
+
+
+
+        'For a As Integer = 0 To panjang
+        '    For b As Integer = 0 To panjang
+        '        NewCA(a, b) = CA(tempPos(a), b)
+        '    Next
+        'Next
+
+        'str = "    "
+
+        'For i As Integer = 0 To tempPos.Length - 1
+        '    str &= "  A" & tempPos(i) + 1
+        'Next
+        'ListHasil3.Items.Add(str)
+
+        'str = ""
+        'For a As Integer = 0 To panjang
+        '    str = " A" & tempPos(a) & " "
+        '    For b As Integer = 0 To panjang
+        '        If (NewCA(a, b) >= 10) Then
+        '            str &= "  "
+        '        Else
+        '            str &= "   "
+        '        End If
+        '        str &= NewCA(a, b)
+        '    Next
+        '    ListHasil3.Items.Add(str)
+        '    str = ""
+        'Next
+
+        ''For i As Integer = 0 To CA.GetUpperBound(0)
+        ''    str = "A" & i + 1 & " "
+        ''    For j As Integer = 0 To CA.GetUpperBound(1)
+        ''        str &= "  " & NewCA(i, j) & "  "
+        ''    Next
+        ''    ListHasil3.Items.Add(str)
+        ''    str = ""
+        ''Next
+    End Sub
+
+
+    Private Function Cont(ByVal Ai As Integer, ByVal Ak As Integer, ByVal Aj As Integer)
+        Return 2 * (Bond(Ai, Ak) + Bond(Ak, Aj) - Bond(Ai, Aj))
+    End Function
+
+    Private Function Bond(ByVal Ax As Integer, ByVal Ay As Integer)
+        Dim jumlah As Integer = 0
+        Dim tmp As Integer = 0
+
+        If (Ax < 0 Or Ay < 0) Then
+            jumlah = 0
+        Else
+
+            If (Ax = penampung) Then
+                For i As Integer = 0 To AA.GetUpperBound(0)
+                    jumlah += AA(i, Ax) * CA(i, Ay)
+                Next
+            ElseIf (Ay = penampung) Then
+                For i As Integer = 0 To AA.GetUpperBound(0)
+                    jumlah += CA(i, Ax) * AA(i, Ay)
+                Next
+            Else
+                For i As Integer = 0 To AA.GetUpperBound(0)
+                    jumlah += AA(i, Ax) * AA(i, Ay)
+                Next
+            End If
+        End If
+        Return jumlah
+    End Function
+
+    Public Function CheckMax(ByVal value1 As Integer, ByVal value2 As Integer)
+        maks = value1
+        If maks <= value2 Then
+            maks = value2
+        End If
+        Return maks
+    End Function
+
+
+
+
+End Class
